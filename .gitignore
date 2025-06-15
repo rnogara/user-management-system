@@ -1,0 +1,32 @@
+# Dependências
+**node_modules
+
+# Ambiente
+**/.env
+**/.env.local
+**/.env.development
+**/.env.production
+**/.env.test
+**/.env.test.local
+**/.env.test.development
+**/.env.test.production
+**/.env.test.development.local
+**/.env.test.production.local
+
+# Logs
+**/*.log
+**/*.log.*
+**/*.log.*.*
+**/*.log.*.*.*
+**/*.log.*.*.*.*
+**/*.log.*.*.*.*.*
+**/*.log.*.*.*.*.*.*
+**/*.log.*.*.*.*.*.*.*
+
+# IDEs
+**/.idea
+**/.vscode
+**/.cursorrules
+**/.cursor
+**/.cursorignore
+**/.cursorignore
