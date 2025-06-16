@@ -7,6 +7,7 @@ import {
   Post,
   Query,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -20,14 +21,20 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { SortOrder, UserRole } from './types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Criar novo usuário (apenas admins)' })
   @ApiResponse({ status: 201, description: 'Usuário criado com sucesso' })
   create(@Body() createUserDto: CreateUserDto) {
@@ -35,6 +42,8 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Listar usuários (apenas admins)' })
   @ApiResponse({ status: 200, description: 'Lista de usuários' })
   findAll(
@@ -46,6 +55,8 @@ export class UsersController {
   }
 
   @Get('inactive')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Listar usuários inativos (apenas admins)' })
   @ApiQuery({ name: 'days', required: false, type: Number })
   findInactiveUsers(@Query('days') days?: number) {
@@ -69,6 +80,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Deletar usuário (apenas admins)' })
   remove(@Param('id') id: string, @Request() req: { user: User }) {
     return this.usersService.remove(id, req.user);
