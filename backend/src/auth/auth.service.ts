@@ -20,6 +20,11 @@ export class AuthService {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
+    const isPasswordValid = await user.validatePassword(loginDto.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
+
     // Atualizar último login
     await this.usersService.updateLastLogin(user.id);
 

@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   Request,
   UseGuards,
@@ -69,8 +70,8 @@ export class UsersController {
     return this.usersService.findOne(req.user.id);
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Obter usuário por ID' })
+  @Put(':id')
+  @ApiOperation({ summary: 'Atualizar usuário' })
   update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
