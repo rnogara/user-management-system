@@ -1,7 +1,8 @@
 'use client';
 
-import { createContext, useContext, useEffect } from "react";
-import { authService } from '../services/authService';
+import { createContext, useContext, useEffect, useState } from "react";
+import React from 'react';
+import { authService } from '@/app/lib/services/authService';
 
 export interface User {
   id: string;
@@ -35,7 +36,7 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-export const AuthProvider = React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -48,6 +49,7 @@ export const AuthProvider = React.FC<AuthProviderProps> = ({ children }) => {
             const userData = await authService.getProfile();
             setUser(userData);
           } catch (error) {
+            console.error('Erro ao carregar perfil:', error);
             localStorage.removeItem('token');
           }
         }
@@ -78,7 +80,7 @@ export const AuthProvider = React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async (): Promise<void> => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
     }
