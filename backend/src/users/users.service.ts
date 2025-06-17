@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { User } from './entities/user.entity';
-import { IsNull, MoreThanOrEqual, Repository } from 'typeorm';
+import { IsNull, LessThanOrEqual, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SortOrder, UserRole } from './types';
@@ -116,7 +116,7 @@ export class UsersService {
     return this.userRepository.find({
       where: [
         { lastLoginAt: IsNull() },
-        { lastLoginAt: MoreThanOrEqual(cutoffDate) },
+        { lastLoginAt: LessThanOrEqual(cutoffDate) },
       ],
     });
   }
