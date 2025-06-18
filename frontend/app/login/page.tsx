@@ -4,6 +4,14 @@ import { useAuth } from '../lib/contexts/AuhContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
+interface ErrorResponse {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,8 +29,8 @@ const Login: React.FC = () => {
     try {
       await login(email, password);
       router.push('/dashboard');
-    } catch (error: any) {
-      setError(error.response?.data?.message || 'Ocorreu um erro ao fazer login');
+    } catch (error: unknown) {
+      setError((error as ErrorResponse).response?.data?.message || 'Ocorreu um erro ao fazer login');
     } finally {
       setIsLoading(false);
     }
