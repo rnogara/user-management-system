@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/app/lib/contexts/AuhContext';
 import { userService } from '@/app/lib/services/userService';
 import LoadingSpinner from '@/app/components/Layout/LoadingSpinner';
@@ -63,15 +63,7 @@ const UserList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState<'all' | 'admin' | 'user'>('all');
 
-  useEffect(() => {
-    fetchUsers();
-  }, [queryParams]);
-
-  useEffect(() => {
-    fetchInactiveUsers();
-  }, []);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setIsLoading(true);
       setError('');
@@ -82,8 +74,6 @@ const UserList: React.FC = () => {
         search: searchTerm || undefined,
       };
       
-      // Adaptação: Como o userService não retorna o formato esperado,
-      // vamos simular a estrutura esperada
       const response = await userService.getAllUsers(params);
       
       // Se a resposta for um array direto, adaptamos
@@ -96,7 +86,7 @@ const UserList: React.FC = () => {
         setUsers(userResponse.data || []);
         setTotalUsers(userResponse.total || 0);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao carregar usuários:', error);
       setError('Erro ao carregar usuários');
       setUsers([]);
@@ -104,7 +94,15 @@ const UserList: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [queryParams, selectedRole, searchTerm]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  useEffect(() => {
+    fetchInactiveUsers();
+  }, []);
 
   const fetchInactiveUsers = async () => {
     try {
