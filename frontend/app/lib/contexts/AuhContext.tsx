@@ -19,6 +19,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (userData: User) => void;
   isAdmin: () => boolean;
 }
 
@@ -64,7 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await authService.login(email, password);
       if (typeof window !== 'undefined') {
-      localStorage.setItem('token', response.access_token);
+        localStorage.setItem('token', response.access_token);
       }
       setUser(response.user);
     } catch (error) {
@@ -87,17 +88,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = (userData: User) => {
+    setUser(userData);
+  };
+
   const isAdmin = (): boolean => {
     return user?.role === 'admin';
   }
+
   const value: AuthContextType = {
     user,
     isLoading,
     login,
     register,
     logout,
+    updateUser,
     isAdmin,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+};
