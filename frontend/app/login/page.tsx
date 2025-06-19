@@ -3,14 +3,7 @@ import React, { useState } from 'react'
 import { useAuth } from '../lib/contexts/AuhContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
-interface ErrorResponse {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-}
+import { ErrorResponse } from '../types';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');

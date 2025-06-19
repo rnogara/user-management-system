@@ -4,7 +4,14 @@ import { api } from "./api";
 interface UpdateUserRequest {
   name?: string;
   password?: string;
+  currentPassword?: string;
   role?: 'admin' | 'user';
+}
+
+interface UpdateProfileRequest {
+  name?: string;
+  password?: string;
+  currentPassword?: string;
 }
 
 interface CreateUserRequest {
@@ -31,6 +38,11 @@ export const userService = {
 
   async updateUser(id: string, data: UpdateUserRequest): Promise<User> {
     const response = await api.put<User>(`/users/${id}`, data);
+    return response.data;
+  },
+
+  async updateProfile(data: UpdateProfileRequest): Promise<User> {
+    const response = await api.put<User>('/auth/profile', data);
     return response.data;
   },
 
