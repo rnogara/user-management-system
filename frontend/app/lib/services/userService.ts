@@ -1,25 +1,6 @@
 import { User } from "../contexts/AuhContext";
 import { api } from "./api";
-
-interface UpdateUserRequest {
-  name?: string;
-  password?: string;
-  currentPassword?: string;
-  role?: 'admin' | 'user';
-}
-
-interface UpdateProfileRequest {
-  name?: string;
-  password?: string;
-  currentPassword?: string;
-}
-
-interface CreateUserRequest {
-  name: string;
-  email: string;
-  password: string;
-  role: 'admin' | 'user';
-}
+import { UpdateUserRequest, UpdateProfileRequest, CreateUserRequest, QueryParams, UserListResponse } from "@/app/types";
 
 export const userService = {
   async getAllUsers(params?: {
@@ -31,6 +12,11 @@ export const userService = {
     return response.data;
   },
 
+  async getUsers(params?: QueryParams): Promise<UserListResponse> {
+    const response = await api.get<UserListResponse>('/users', { params });
+    return response.data;
+  },
+  
   async getUserById(id: string): Promise<User> {
     const response = await api.get<User>(`/users/${id}`);
     return response.data;
